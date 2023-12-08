@@ -9,37 +9,15 @@ import { SelectAllProducts, addProduct, editProduct, removeProduct } from '../st
 const Home: React.FC = () => {
     const products = useAppSelector(SelectAllProducts)
     const dispatch = useAppDispatch();
-    
-  const handleAddProduct = (product: { name: string; price: number }) => {
-    const newProduct: ProductType = {
-      id: Date.now(),
-      ...product,
-    };
-    dispatch(addProduct(newProduct))
-  }
 
-  const handleDeleteProduct = (id: number) => {
-    dispatch(removeProduct(id))
-  };
-
-  const handleUpdateProduct = (id: number, newName: string, newPrice: number) => {
-    const updatedProduct: ProductType = {
-        id: id,
-        name: newName,
-        price:newPrice
-    }
-    dispatch(editProduct(updatedProduct))
-  };
-
+  
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Paper elevation={3} style={{ padding: '16px', marginTop: '16px' }}>
-        <ProductForm onSubmit={handleAddProduct} />
+        <ProductForm/>
         <ProductList
           products={products}
-          onDelete={handleDeleteProduct}
-          onUpdate={handleUpdateProduct}
         />
       </Paper>
     </Container>

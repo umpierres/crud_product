@@ -1,16 +1,16 @@
 // components/ProductForm.tsx
 import React, { useState } from 'react';
 import { Button, TextField, Container, Typography, Grid } from '@mui/material';
+import { addProduct } from '../store/modules/productSlice';
+import ProductType from '../types/productType';
+import { useAppDispatch } from '../store/hooks';
 
-interface ProductFormProps {
-  onSubmit: (product: { name: string; price: number }) => void;
-}
-
-const ProductForm: React.FC<ProductFormProps> = ({ onSubmit }) => {
+const ProductForm: React.FC = () => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
   const [errorName, setErrorName] = useState<string | null>(null);
   const [errorPrice, setErrorPrice] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +25,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit }) => {
       return;
     }
 
-    onSubmit({ name, price });
+    const newProduct: ProductType = {
+      id: Date.now(),
+      name,
+      price
+    };
+    dispatch(addProduct(newProduct))
     setName('');
     setPrice(0);
     setErrorName(null);

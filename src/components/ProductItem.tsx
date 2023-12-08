@@ -11,17 +11,33 @@ import {
   DialogActions,
   TextField,
 } from '@mui/material';
+import { useAppDispatch } from '../store/hooks';
+import ProductType from '../types/productType';
+import { editProduct, removeProduct } from '../store/modules/productSlice';
 
 interface ProductItemProps {
   product: { id: number; name: string; price: number };
-  onDelete: (id: number) => void;
-  onUpdate: (id: number, newName: string, newPrice: number) => void;
 }
 
-const ProductItem: React.FC<ProductItemProps> = ({ product, onDelete, onUpdate }) => {
+const ProductItem: React.FC<ProductItemProps> = ({ product}) => {
   const [isEditing, setEditing] = useState(false);
   const [newName, setNewName] = useState(product.name);
   const [newPrice, setNewPrice] = useState(product.price);
+  const dispatch = useAppDispatch();
+
+
+  const handleDeleteProduct = (id: number) => {
+    dispatch(removeProduct(id))
+  };
+
+  const handleUpdateProduct = (id: number, newName: string, newPrice: number) => {
+    const updatedProduct: ProductType = {
+        id: id,
+        name: newName,
+        price:newPrice
+    }
+    dispatch(editProduct(updatedProduct))
+  };
 
   const handleEdit = () => {
     setEditing(true);
@@ -34,7 +50,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onDelete, onUpdate }
   };
 
   const handleSaveEdit = () => {
-    onUpdate(product.id, newName, newPrice);
+    handleUpdateProduct(product.id, newName, newPrice);
     setEditing(false);
   };
 
@@ -43,7 +59,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onDelete, onUpdate }
       <CardContent>
         <Typography variant="h6">{product.name}</Typography>
         <Typography variant="body1">${product.price}</Typography>
-        <Button onClick={() => onDelete(product.id)} variant="contained" color="secondary">
+        <Button onClick={() => handleDeleteProduct(product.id)} variant="contained" color="secondary">
           Deletar
         </Button>
         <Button onClick={handleEdit} style={{ marginLeft: '8px' }} variant="contained" color="primary">
